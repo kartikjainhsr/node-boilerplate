@@ -186,6 +186,7 @@ const mongooseModel = {
         }
       }
     });
+    console.log('filter', filter);
     filter = justifyData({ data: filter, currentUser: user });
     console.log('topLevelFields', topLevelFields);
     console.log('populateStack', JSON.stringify(populateStack, null, 4));
@@ -242,11 +243,11 @@ const mongooseModel = {
       filter = { ...filter, ...access.filter };
     }
     each(Object.keys(filter), (field) => {
-      if (!access.fields[field]) {
+      if (!access.filter_access.fields[field]) {
         console.log('filed...', field);
         if (field !== '_id') {
           throw new APIError({
-            message: `you are not permitted to filter ${field}`,
+            message: `you are not permitted to filter on ${field}`,
             status: httpStatus.FORBIDDEN,
           });
         }
@@ -320,10 +321,9 @@ const justifyData = ({ data, currentUser }) => {
             }
             return value;
           }
-        } else {
-          console.log('arrayElement......', arrayElement);
-          return justifyData({ data: arrayElement, currentUser });
+          return arrayElement;
         }
+        return justifyData({ data: arrayElement, currentUser });
       });
     } else if (typeof data[key] === 'string' && data[key].indexOf('=') !== -1) {
       let value = data[key].replace('=', '');

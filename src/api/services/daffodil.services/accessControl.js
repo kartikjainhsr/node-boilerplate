@@ -13,6 +13,11 @@ const accessControl = {
     const accessValues = get(this.grantList, `${user.role}.${table}.${accessType}`, false);
     if (accessValues) {
       accessValues.filter = JSON.parse(JSON.stringify(accessValues.filter || {}).replace('/=currentUser/g', user._id));
+      if (accessType === 'update_any') {
+        accessValues.filter_access = get(this.grantList, `${user.role}.${table}.read_any`, false);
+      } else if (accessType === 'update_own') {
+        accessValues.filter_access = get(this.grantList, `${user.role}.${table}.read_own`, false);
+      }
       return {
         allowed: true,
         ...accessValues,
