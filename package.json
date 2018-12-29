@@ -62,7 +62,6 @@
     "starter project"
   ],
   "dependencies": {
-    "applane": "git+https://bansal_ayush:daffodil12@bitbucket.org/monikasachdev/applane.git",
     "axios": "^0.18.0",
     "bcryptjs": "2.4.3",
     "bluebird": "^3.5.0",

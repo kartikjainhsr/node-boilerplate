@@ -25,18 +25,18 @@ router
    * @apiDescription Get a list of any permitted collection
    * @apiVersion 1.0.0
    * @apiName getAll
-   * @apiGroup GET
+   * @apiGroup CRUD
    * @apiPermission TO DO
    *
    * @apiHeader {String} Authorization  User's access token
    *
-   * @apiParam  {Number{1-}}         [page=1]     List page
-   * @apiParam  {Number{1-100}}      [perPage=1]  Per page
-   * @apiParam  {Object}                   [filter]     Collection filter same as mongodb syntax
-   * @apiParam  {Object}                   [fields]     fields need to provide in format like {name: 1, "service.password": 1}
-   * @apiParam  {Object}                   [sort]       sort on allowed fields same as mongodb syntax
+   * @apiParam  {Number{1-}}                [page=1]     List page
+   * @apiParam  {Number{1-100}}             [perPage=1]  Per page
+   * @apiParam  {Object}                    [filter]     Collection filter same as mongodb syntax
+   * @apiParam  {Object}                    [fields]     fields need to provide in format like {name: 1, "service.password": 1}
+   * @apiParam  {Object}                    [sort]       sort on allowed fields same as mongodb syntax
    *
-   * @apiSuccess {Object[]} users List of users.
+   * @apiSuccess {Object[]} records List of records.
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     You will need permission to access the data
