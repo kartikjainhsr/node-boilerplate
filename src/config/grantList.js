@@ -53,6 +53,20 @@ const grantList =
               allowedFields: ['address.city'],
             },
           },
+          update_own: {
+            filter: { user: '=currentUser._id' },
+            allowedFields: ['*'],
+            deniedFields: ['address.country.name'],
+            $pop: {
+              allowedFields: ['*'],
+            },
+            $pull: {
+              allowedFields: ['location', 'grades'],
+            },
+            $unset: {
+              allowedFields: ['address.city'],
+            },
+          },
         },
       },
       // [ROLES.CUSTOMER]: {

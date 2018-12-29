@@ -341,27 +341,6 @@ const justifyData = ({ data, currentUser }) => {
   return data;
 };
 
-// const justifySetter = ({ setter, currentUser }) => {
-//   each(Object.keys(setter), (key) => {
-//     if (typeof setter[key] === 'object') {
-//       setter[key] = justifySetter({ setter: setter[key], currentUser });
-//     } else if (typeof setter[key] === 'string' && setter[key].indexOf('=') !== -1) {
-//       let value = setter[key].replace('=', '');
-//       console.log('value.............', value);
-//       value = get({ currentUser }, value, 'null');
-//       if (value === 'null') {
-//         throw new APIError({
-//           message: `Current user doen't contain value at ${setter[key]}`,
-//           status: httpStatus.CONFLICT,
-//         });
-//       }
-//       setter[key] = value;
-//     }
-//   });
-//   console.log('value.............', setter);
-//   return setter;
-// };
-
 const normalize = ({
   parentRequestParams, reqParams, access, appendKey = '', populateStack = [], topLevelFields = '',
 }) => {
