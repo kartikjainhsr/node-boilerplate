@@ -1,5 +1,5 @@
 {
-  "name": "express-es8-rest-boilerplate",
+  "name": "node-boilerplate",
   "version": "0.0.1",
   "description": "Express boilerplate for building RESTful APIs using mongodb",
   "author": "Ridham Tarpara <ridham.tarpara@gmail.com>",

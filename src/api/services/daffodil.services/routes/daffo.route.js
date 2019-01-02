@@ -21,234 +21,158 @@ const router = express.Router();
 router
   .route('/:collection/get')
   /**
-   * @api {all} v1/daffo/:collection/get List any collection
-   * @apiDescription Get a list of any permitted collection
+   * @api {all} v1/daffo/:collection/get Read Any documents
+   * @apiDescription Get a list of any permitted collection's documents.
    * @apiVersion 1.0.0
-   * @apiName getAll
+   * @apiName readAnyCollection
    * @apiGroup CRUD
-   * @apiPermission TO DO
+   * @apiPermission Any permitted role.
    *
    * @apiHeader {String} Authorization  User's access token
    *
-   * @apiParam  {Number{1-}}                [page=1]     List page
-   * @apiParam  {Number{1-100}}             [perPage=1]  Per page
-   * @apiParam  {Object}                    [filter]     Collection filter same as mongodb syntax
-   * @apiParam  {Object}                    [fields]     fields need to provide in format like {name: 1, "service.password": 1}
-   * @apiParam  {Object}                    [sort]       sort on allowed fields same as mongodb syntax
+   * @apiParam  {Number{1-}}       [page=1]      List page
+   * @apiParam  {Number{1-100}}    [perPage=1]   Records Per page
+   * @apiParam  {Object}           [filter]      Collection filter same as mongodb syntax.For ex : {filter : {"age" : {$gte : 20 }}}
+   * @apiParam  {Object}           [fields]      Fields need to provide in format like {name: 1, "service.password": 1}
+   * @apiParam  {Object}           [sort]        Sort on allowed fields same as mongodb syntax
    *
-   * @apiSuccess {Object[]} records List of records.
+   * @apiSuccess {Object[]}                      Records List of records.
    *
-   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
-   * @apiError (Forbidden 403)     Forbidden     You will need permission to access the data
+   * @apiError (Forbidden 403)     Forbidden     You will need permission in grant list to access the data.
    */
   .all(authorize('read_any'), controller.list);
 
 router
-  .route('/:collection/create')
-  // .get(authorize(), validate(listUsers), controller.list)
-  /**
-   * @api {post} v1/users Create User
-   * @apiDescription Create a new user
-   * @apiVersion 1.0.0
-   * @apiName CreateUser
-   * @apiGroup User
-   * @apiPermission admin
-   *
-   * @apiHeader {String} Authorization  User's access token
-   *
-   * @apiParam  {String}             email     User's email
-   * @apiParam  {String{6..128}}     password  User's password
-   * @apiParam  {String{..128}}      [name]    User's name
-   * @apiParam  {String=user,admin}  [role]    User's role
-   *
-   * @apiSuccess (Created 201) {String}  id         User's id
-   * @apiSuccess (Created 201) {String}  name       User's name
-   * @apiSuccess (Created 201) {String}  email      User's email
-   * @apiSuccess (Created 201) {String}  role       User's role
-   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
-   *
-   * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
-   * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
-   * @apiError (Forbidden 403)     Forbidden        Only admins can create the data
-   */
-  .post(authorize('create_own'), controller.create);
-// .post(authorize(), validate(createUser), controller.create);
-
-
-// router
-//   .route('/profile')
-/**
-   * @api {all} v1/users/profile User Profile
-   * @apiDescription Get logged in user profile information
-   * @apiVersion 1.0.0
-   * @apiName UserProfile
-   * @apiGroup User
-   * @apiPermission user
-   *
-   * @apiHeader {String} Authorization  User's access token
-   *
-   * @apiSuccess {String}  id         User's id
-   * @apiSuccess {String}  name       User's name
-   * @apiSuccess {String}  email      User's email
-   * @apiSuccess {String}  role       User's role
-   * @apiSuccess {Date}    createdAt  Timestamp
-   *
-   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
-   */
-// .get(authorize(), controller.loggedIn);
-
-
-router
   .route('/:collection/getOwn')
 /**
-   * @api {get} v1/users/:id Get User
-   * @apiDescription Get user information
+   * @api {all} v1/daffo/:collection/getOwn Read Own documents
+   * @apiDescription Read only own referenced documents from collection.
    * @apiVersion 1.0.0
-   * @apiName GetUser
-   * @apiGroup User
-   * @apiPermission user
+   * @apiName readOwnRefrencedCollection
+   * @apiGroup CRUD
+   * @apiPermission Any Permitted Role.
    *
    * @apiHeader {String} Authorization  User's access token
    *
-   * @apiSuccess {String}  id         User's id
-   * @apiSuccess {String}  name       User's name
-   * @apiSuccess {String}  email      User's email
-   * @apiSuccess {String}  role       User's role
-   * @apiSuccess {Date}    createdAt  Timestamp
+   * @apiParam  {Number{1-}}      [page=1]     List page
+   * @apiParam  {Number{1-100}}   [perPage=1]  Per page
+   * @apiParam  {Object}          [filter]     Collection filter same as mongodb syntax.For ex : {filter : {"age" : {$gte : 20 }}}
+   * @apiParam  {Object}          [fields]     Fields need to provide in format like {name: 1, "service.password": 1}
+   * @apiParam  {Object}          [sort]       Sort on allowed fields same as mongodb syntax
    *
-   * @apiError (Unauthorized 401) Unauthorized Only authenticated users can access the data
-   * @apiError (Forbidden 403)    Forbidden    Only user with same id or admins can access the data
-   * @apiError (Not Found 404)    NotFound     User does not exist
+   * @apiError (Forbidden 403)    Forbidden    You will need permission in grant list to access the data.
+   * @apiError (Conflict  409)    Conflict     You will need to give current user id in filter.
    */
   .all(authorize('read_own'), controller.get);
-/**
-   * @api {put} v1/users/:id Replace User
-   * @apiDescription Replace the whole user document with a new one
+
+router
+  .route('/:collection/create')
+  /**
+   * @api {post} v1/daffo/:collection/create Create Own documents
+   * @apiDescription Create own collection's documents
    * @apiVersion 1.0.0
-   * @apiName ReplaceUser
-   * @apiGroup User
-   * @apiPermission user
+   * @apiName createCollection
+   * @apiGroup CRUD
+   * @apiPermission Any Permitted Role.
    *
-   * @apiHeader {String} Authorization  User's access token
+   * @apiHeader {String}                  Authorization        User's access token
    *
-   * @apiParam  {String}             email     User's email
-   * @apiParam  {String{6..128}}     password  User's password
-   * @apiParam  {String{..128}}      [name]    User's name
-   * @apiParam  {String=user,admin}  [role]    User's role
-   * (You must be an admin to change the user's role)
+   * @apiParam  {String}                  any_required_string  Give the required string field in body params
+   * @apiParam  {Number}                  any_required_number  Give the required number field in body params
+   * @apiParam  {Object}                  any_required_object  Give the required object field in body params
    *
-   * @apiSuccess {String}  id         User's id
-   * @apiSuccess {String}  name       User's name
-   * @apiSuccess {String}  email      User's email
-   * @apiSuccess {String}  role       User's role
-   * @apiSuccess {Date}    createdAt  Timestamp
+   * @apiSuccess (Created 201) {String}   id                   Returns the Id of created document
+   * @apiSuccess (Created 201) {String}   any_created_string   Returns the created string field
+   * @apiSuccess (Created 201) {Number}   any_created_number   Returns the created number field
+   * @apiSuccess (Created 201) {Object}   any_created_object   Returns the created object field
    *
-   * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
-   * @apiError (Unauthorized 401) Unauthorized Only authenticated users can modify the data
-   * @apiError (Forbidden 403)    Forbidden    Only user with same id or admins can modify the data
-   * @apiError (Not Found 404)    NotFound     User does not exist
+   * @apiError (Forbidden 403)                 Forbidden       You will need permission to create the data.
+   * @apiError (Internal Server Error 500)     Required_Fields You will need to give required fields in the body params or the given required fields have existing values.
    */
-// .put(authorize(), validate(replaceUser), controller.replace)
+  .post(authorize('create_own'), controller.create);
+
 router
   .route('/:collection/update')
 /**
-   * @api {patch} v1/users/:id Update User
-   * @apiDescription Update some fields of a user document
+   * @api {patch} v1/daffo/:collection/update Update Any documents
+   * @apiDescription Update permitted fields of any collection's documents.
    * @apiVersion 1.0.0
-   * @apiName UpdateUser
-   * @apiGroup User
-   * @apiPermission user
+   * @apiName update
+   * @apiGroup CRUD
+   * @apiPermission Any Permitted Role.
    *
-   * @apiHeader {String} Authorization  User's access token
+   * @apiHeader {String}                   Authorization    User's access token
    *
-   * @apiParam  {String}             email     User's email
-   * @apiParam  {String{6..128}}     password  User's password
-   * @apiParam  {String{..128}}      [name]    User's name
-   * @apiParam  {String=user,admin}  [role]    User's role
-   * (You must be an admin to change the user's role)
+   * @apiParam  {Object}   setter          Update query same as mongodb syntax.For ex : {setter : { $push : "grades" : 20 }}
+   * @apiParam  {Object}   [filter]        Collection filter same as mongodb syntax.For ex : {filter : {"age" : {$gte : 20 }}}
    *
-   * @apiSuccess {String}  id         User's id
-   * @apiSuccess {String}  name       User's name
-   * @apiSuccess {String}  email      User's email
-   * @apiSuccess {String}  role       User's role
-   * @apiSuccess {Date}    createdAt  Timestamp
+   * @apiSuccess (No Content 204)          Success          Successfully updated the records.
    *
-   * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
-   * @apiError (Unauthorized 401) Unauthorized Only authenticated users can modify the data
-   * @apiError (Forbidden 403)    Forbidden    Only user with same id or admins can modify the data
-   * @apiError (Not Found 404)    NotFound     User does not exist
+   * @apiError (Forbidden 403)             Forbidden        You will need permission to update the data.
+   * @apiError (Internal Server Error 500) Undefined        You will need to give the setter in body params.
    */
   .patch(authorize('update_any'), controller.update);
 
 router
   .route('/:collection/updateOwn')
 /**
-   * @api {patch} v1/users/:id Update User
-   * @apiDescription Update some fields of a user document
+   * @api {patch} v1/daffo/:collection/updateOwn Update Own documents
+   * @apiDescription Update own referenced collection's documents.
    * @apiVersion 1.0.0
    * @apiName UpdateUser
-   * @apiGroup User
-   * @apiPermission user
+   * @apiGroup CRUD
+   * @apiPermission Any Permitted Role.
    *
-   * @apiHeader {String} Authorization  User's access token
+   * @apiHeader {String}                    Authorization   User's access token
    *
-   * @apiParam  {String}             email     User's email
-   * @apiParam  {String{6..128}}     password  User's password
-   * @apiParam  {String{..128}}      [name]    User's name
-   * @apiParam  {String=user,admin}  [role]    User's role
-   * (You must be an admin to change the user's role)
+   * @apiParam  {Object}   setter           Update query same as mongodb syntax.For ex : {setter : { $push : "grades" : 20 }}
+   * @apiParam  {Object}   [filter]         Collection filter same as mongodb syntax.For ex : {filter : {"age" : {$gte : 20 }}}
    *
-   * @apiSuccess {String}  id         User's id
-   * @apiSuccess {String}  name       User's name
-   * @apiSuccess {String}  email      User's email
-   * @apiSuccess {String}  role       User's role
-   * @apiSuccess {Date}    createdAt  Timestamp
+   * @apiSuccess (No Content 204)           Success         Successfully updated the records.
    *
-   * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
-   * @apiError (Unauthorized 401) Unauthorized Only authenticated users can modify the data
-   * @apiError (Forbidden 403)    Forbidden    Only user with same id or admins can modify the data
-   * @apiError (Not Found 404)    NotFound     User does not exist
+   * @apiError (Forbidden 403)              Forbidden       You will need permission to update the data.
+   * @apiError (Internal Server Error 500)  Undefined       You will need to give the setter in body params.
    */
   .patch(authorize('update_own'), controller.update);
+
 router
   .route('/:collection/deleteOwn')
 /**
-   * @api {patch} v1/users/:id Delete User
-   * @apiDescription Delete a user
+   * @api {delete} v1/daffo/:collection/deleteOwn Delete Own documents
+   * @apiDescription Delete own referenced collection's documents.
    * @apiVersion 1.0.0
-   * @apiName DeleteUser
-   * @apiGroup User
-   * @apiPermission user
+   * @apiName DeleteOwnCollection
+   * @apiGroup CRUD
+   * @apiPermission Any Permitted Role.
    *
-   * @apiHeader {String} Authorization  User's access token
+   * @apiHeader {String}                  Authorization  User's access token
    *
-   * @apiSuccess (No Content 204)  Successfully deleted
+   * @apiParam  {Object}   [filter]       Collection filter same as mongodb syntax.For ex : {filter : {"age" : {$gte : 20 }}}
    *
-   * @apiError (Unauthorized 401) Unauthorized  Only authenticated users can delete the data
-   * @apiError (Forbidden 403)    Forbidden     Only user with same id or admins can delete the data
-   * @apiError (Not Found 404)    NotFound      User does not exist
+   * @apiSuccess (No Content 204)         Success        Successfully deleted the records.
+   *
+   * @apiError (Forbidden 403)            Forbidden      You will need permission to remove the data.
    */
   .delete(authorize('remove_own'), controller.remove);
 
 router
   .route('/:collection/delete')
 /**
-   * @api {patch} v1/users/:id Delete User
-   * @apiDescription Delete a user
+   * @api {delete} v1/daffo/:collection/delete Delete Any documents
+   * @apiDescription Delete Any collection's documents.
    * @apiVersion 1.0.0
-   * @apiName DeleteUser
-   * @apiGroup User
-   * @apiPermission user
+   * @apiName deleteAnyCollection
+   * @apiGroup CRUD
+   * @apiPermission Any permitted role.
    *
-   * @apiHeader {String} Authorization  User's access token
+   * @apiHeader {String}                  Authorization  User's access token
    *
-   * @apiSuccess (No Content 204)  Successfully deleted
+   * @apiParam  {Object}   [filter]       Collection filter same as mongodb syntax.For ex : {filter : {"age" : {$gte : 20 }}}
    *
-   * @apiError (Unauthorized 401) Unauthorized  Only authenticated users can delete the data
-   * @apiError (Forbidden 403)    Forbidden     Only user with same id or admins can delete the data
-   * @apiError (Not Found 404)    NotFound      User does not exist
+   * @apiSuccess (No Content 204)         Success        Successfully deleted the records.
+   *
+   * @apiError (Forbidden 403)            Forbidden      You will need permission to remove the data.
    */
   .delete(authorize('remove_any'), controller.remove);
-
 
 module.exports = router;
