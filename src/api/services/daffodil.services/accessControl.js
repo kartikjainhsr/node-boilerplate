@@ -41,7 +41,7 @@ const accessControl = {
         });
       });
     });
-    console.log('grantList', JSON.stringify(this.grantList, null, 4));
+    // console.log('grantList', JSON.stringify(this.grantList, null, 4));
   },
   addFields(schema, table) {
     const schemaKeys = getFields(schema);
@@ -92,17 +92,17 @@ const permissions = ({
     const schemaKeysCopy = JSON.parse(JSON.stringify(allSchemaFields[table]));
     each(deniedFields, (field) => {
       each(Object.keys(schemaKeysCopy), (schemaField) => {
-        console.log('schemaField', schemaField, field);
+        // console.log('schemaField', schemaField, field);
         if (schemaField.indexOf(field) === 0) {
           delete schemaKeysCopy[schemaField];
         }
       });
     });
     convertToFieldsJSON(schemaKeysCopy, fields, '', allSchemaFields, false, access, grantList, role, level);
-    console.log('schemaKeysCopy', schemaKeysCopy);
+    // console.log('schemaKeysCopy', schemaKeysCopy);
     each(deniedFields, (field) => {
       each(Object.keys(fields), (schemaField) => {
-        console.log('schemaField', schemaField, field);
+        // console.log('schemaField', schemaField, field);
         if (schemaField.indexOf(field) === 0) {
           delete fields[schemaField];
         }

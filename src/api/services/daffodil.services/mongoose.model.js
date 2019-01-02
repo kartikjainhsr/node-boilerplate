@@ -7,16 +7,14 @@ const {
 } = require('lodash');
 const APIError = require('./utils/APIError');
 
-console.log('omitBy', omitBy, each, get, isNil);
-
 const MongoOperators = [
   '$set', '$inc', '$push', '$min', '$max', '$addToSet',
 ];
 
 const MongoDeleteOperators = ['$pop', '$pull', '$unset'];
 
+const collection = {};
 const mongooseModel = {
-  collection: {},
   addCollection(collectionName, collectionFields, hooks, methods) {
     const collectionSchema = new mongoose.Schema(collectionFields, { timestamps: true });
     /*
@@ -33,8 +31,8 @@ const mongooseModel = {
     */
     if (hooks) {
       each(Object.keys(hooks), (hook) => {
-        each(Object.keys(hook), (hookType) => {
-          collectionSchema[hook](hookType, hook[hookType]);
+        each(Object.keys(hooks[hook]), (hookType) => {
+          collectionSchema[hook](hookType, hooks[hook][hookType]);
         });
       });
     }
@@ -51,7 +49,7 @@ const mongooseModel = {
      * @returns {Promise<Collection[]>}
      */
       get({
-        page = 1, perPage = 30, sort = { createdAt: -1 }, filter = {}, fields, populate,
+        page = 1, perPage = 30, sort = { createdAt: -1 }, filter = {}, fields, populate = [],
       }) {
         if (perPage === 0) {
           throw new APIError({
@@ -142,10 +140,10 @@ const mongooseModel = {
       },
 
     };
-    this[collectionName] = mongoose.model(collectionName, collectionSchema);
+    collection[collectionName] = mongoose.model(collectionName, collectionSchema);
   },
   getCollection(collectionName) {
-    return this[collectionName];
+    return collection[collectionName];
   },
   queryMakerAndValidator({ access, reqParams, user }) {
     // const options = omitBy({ name, email, role }, isNil);

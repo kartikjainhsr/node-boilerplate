@@ -11,11 +11,12 @@ const { logs } = require('./vars');
 const strategies = require('./passport');
 const error = require('../api/middlewares/error');
 const rateLimiter = require('../api/middlewares/rateLimiter');
+const fileUpload = require('express-fileupload');
 
 /**
-* Express instance
-* @public
-*/
+ * Express instance
+ * @public
+ */
 const app = express();
 
 // request logging. dev: console | production: file
@@ -49,6 +50,8 @@ app.use('/docs', express.static('docs'));
 // enable rate limit
 app.use(rateLimiter());
 
+// file upload
+app.use(fileUpload());
 // mount api v1 routes
 app.use('/v1', routes);
 

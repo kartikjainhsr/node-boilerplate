@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const { env } = require('../../../config/vars');
 
 module.exports = {
   User: {

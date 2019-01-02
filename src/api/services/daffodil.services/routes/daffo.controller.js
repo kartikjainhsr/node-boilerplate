@@ -92,3 +92,15 @@ exports.remove = async (req, res, next) => {
     next(error);
   }
 };
+/**
+ * Dispatch an action
+ * @public
+ */
+exports.actionHandler = async (req, res, next) => {
+  try {
+    const response = await service.actionHandler(req, res, next);
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};

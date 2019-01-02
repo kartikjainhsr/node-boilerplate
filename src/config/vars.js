@@ -17,4 +17,7 @@ module.exports = {
   logs: process.env.NODE_ENV === 'production' ? 'combined' : 'dev',
   rateLimitTime: process.env.RATE_LIMIT_TIME,
   rateLimitRequest: process.env.RATE_LIMIT_REQUEST,
+  fileUpload: {
+    type: 'local', // local or S3 or db
+  },
 };

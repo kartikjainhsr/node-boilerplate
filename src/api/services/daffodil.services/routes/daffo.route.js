@@ -250,5 +250,9 @@ router
    */
   .delete(authorize('remove_any'), controller.remove);
 
+router
+  .route('/dispatch/:action')
+  .all(controller.actionHandler);
+
 
 module.exports = router;
