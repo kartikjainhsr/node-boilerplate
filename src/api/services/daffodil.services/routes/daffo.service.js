@@ -1,4 +1,5 @@
 import mongooseModel from '../mongoose.model';
+import API_STORE from '../api.store';
 
 const { omit } = require('lodash');
 
@@ -137,6 +138,19 @@ exports.remove = async ({
     const data = mongooseModel.queryMakerAndValidator({ access, user, reqParams: { ...query, ...params, ...body } });
     const users = await Collection.remove(data.filter);
     // const transformedUsers = users.map(user => user.transform());
+    return users;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Dispatch action
+ * @public
+ */
+exports.actionHandler = async (req, resp, next) => {
+  try {
+    const users = await API_STORE.dispatch(req.params.action, req, resp);
     return users;
   } catch (error) {
     throw error;

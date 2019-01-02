@@ -13,6 +13,11 @@ const accessControl = {
     const accessValues = get(this.grantList, `${user.role}.${table}.${accessType}`, false);
     if (accessValues) {
       accessValues.filter = JSON.parse(JSON.stringify(accessValues.filter || {}).replace('/=currentUser/g', user._id));
+      if (accessType === 'update_any') {
+        accessValues.filter_access = get(this.grantList, `${user.role}.${table}.read_any`, false);
+      } else if (accessType === 'update_own') {
+        accessValues.filter_access = get(this.grantList, `${user.role}.${table}.read_own`, false);
+      }
       return {
         allowed: true,
         ...accessValues,
@@ -36,7 +41,7 @@ const accessControl = {
         });
       });
     });
-    console.log('grantList', JSON.stringify(this.grantList, null, 4));
+    // console.log('grantList', JSON.stringify(this.grantList, null, 4));
   },
   addFields(schema, table) {
     const schemaKeys = getFields(schema);
@@ -87,17 +92,17 @@ const permissions = ({
     const schemaKeysCopy = JSON.parse(JSON.stringify(allSchemaFields[table]));
     each(deniedFields, (field) => {
       each(Object.keys(schemaKeysCopy), (schemaField) => {
-        console.log('schemaField', schemaField, field);
+        // console.log('schemaField', schemaField, field);
         if (schemaField.indexOf(field) === 0) {
           delete schemaKeysCopy[schemaField];
         }
       });
     });
     convertToFieldsJSON(schemaKeysCopy, fields, '', allSchemaFields, false, access, grantList, role, level);
-    console.log('schemaKeysCopy', schemaKeysCopy);
+    // console.log('schemaKeysCopy', schemaKeysCopy);
     each(deniedFields, (field) => {
       each(Object.keys(fields), (schemaField) => {
-        console.log('schemaField', schemaField, field);
+        // console.log('schemaField', schemaField, field);
         if (schemaField.indexOf(field) === 0) {
           delete fields[schemaField];
         }
