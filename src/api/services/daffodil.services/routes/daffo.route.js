@@ -175,12 +175,9 @@ router
    */
   .delete(authorize('remove_any'), controller.remove);
 
-<<<<<<< HEAD
-=======
 router
   .route('/dispatch/:action')
   .all(controller.actionHandler);
 
 
->>>>>>> e21ce9307c6f71c7948b71b5b8ab6d8d99fa792d
 module.exports = router;
