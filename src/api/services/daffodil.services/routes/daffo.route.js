@@ -179,5 +179,29 @@ router
   .route('/dispatch/:action')
   .all(controller.actionHandler);
 
+router
+  .route('/file/:bucket/:filename')
+/**
+     * @api {all} v1/daffo/file/bucket/filename File Upload
+     * @apiDescription get file from server
+     * @apiVersion 1.0.0
+     * @apiName get files
+     * @apiGroup Files
+     * @apiPermission public or private or role based
+     *
+     * @apiHeader {String} Authorization  User's access token required for public or role based api
+     * @apiHeader {String} content-type   multipart/form-data
+     *
+     * @apiParam  {string}    bucket     bucket name with filename
+     * @apiParam  {String}    filename   name of file
+     *
+     * @apiSuccess (Done 200) {Object}  response    response object
+     *
+     * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
+     * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users
+     * @apiError (Forbidden 403)     Forbidden        You are not allowed to access this API
+  */
+  .get(controller.fileHandler);
+
 
 module.exports = router;

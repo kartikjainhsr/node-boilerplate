@@ -1,6 +1,11 @@
 import mongooseModel from '../mongoose.model';
 import API_STORE from '../api.store';
+import { authWrapper } from '../../../middlewares/auth';
+import { download } from '../../../utils/fileSystem';
 
+const { fileUpload } = require('../../../../config/vars');
+const APIError = require('../../../utils/APIError');
+const httpStatus = require('http-status');
 const { omit } = require('lodash');
 
 // const User = require('./user.model');
@@ -152,6 +157,64 @@ exports.actionHandler = async (req, resp, next) => {
   try {
     const users = await API_STORE.dispatch(req.params.action, req, resp);
     return users;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * get file
+ * @public
+ */
+exports.fileHandler = async (req, resp, next) => {
+  try {
+    const auth = authWrapper();
+    return new Promise((resolve, reject) => {
+      auth(req, resp, async (error, _) => {
+        let { filename, bucket } = req.params;
+        const permissions = fileUpload.buckets[bucket] && fileUpload.buckets[bucket].permissions.read;
+        const isValidRequest = permissions.indexOf('ANY') !== -1 || permissions.indexOf(user.role) !== -1;
+        if (isValidRequest) {
+          if (fileUpload.type == 'local') {
+            try {
+              console.log('req', req.user, __dirname, permissions, isValidRequest);
+              return download(`${appRoot}/uploads/${bucket}/${filename}`).then((file) => { resp.send(file); return resolve(file); }).catch(err => reject(err));
+            } catch (err) {
+              return reject(err);
+            }
+          } else {
+            try {
+              console.log('req', req.user, __dirname, permissions, isValidRequest);
+              filename = `${bucket}/${filename}`;
+
+              gfs.exist({ filename }, (err, file) => {
+                if (err || !file) {
+                  const apiError = new APIError({
+                    message: 'File Not found',
+                    status: httpStatus.BAD_REQUEST,
+                    stack: undefined,
+                  });
+                  return reject(apiError);
+                }
+
+                const readstream = gfs.createReadStream({ filename });
+                readstream.pipe(resp);
+                return resolve(true);
+              });
+            } catch (err) {
+              return reject(err);
+            }
+          }
+        } else {
+          const apiError = new APIError({
+            message: 'Unauthorized',
+            status: httpStatus.FORBIDDEN,
+            stack: undefined,
+          });
+          return reject(apiError);
+        }
+      });
+    });
   } catch (error) {
     throw error;
   }

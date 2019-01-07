@@ -18,6 +18,19 @@ module.exports = {
   rateLimitTime: process.env.RATE_LIMIT_TIME,
   rateLimitRequest: process.env.RATE_LIMIT_REQUEST,
   fileUpload: {
+    // type: 'local', // local or S3 or db
+    // buckets: {
+    //   public: { permissions: { write: 'ANY', read: 'ANY' } },
+    //   app: { permissions: { write: ['SUPERADMIN'], read: ['SUPERADMIN', 'CUSTOMER'] } },
+    //   authBucket: { permissions: { write: ['CUSTOMER'], read: ['SUPERADMIN', 'CUSTOMER'] } },
+    // },
+
     type: 'local', // local or S3 or db
+    buckets: {
+      public: { permissions: { write: 'ANY', read: 'ANY' } },
+      app: { permissions: { write: ['SUPERADMIN'], read: ['SUPERADMIN', 'CUSTOMER'] } },
+      authBucket: { permissions: { write: ['CUSTOMER'], read: ['SUPERADMIN', 'CUSTOMER'] } },
+    },
+
   },
 };

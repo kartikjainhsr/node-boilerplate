@@ -6,6 +6,10 @@ import hooks from './api/services/hooks';
 import methods from './api/services/methods';
 import actions from './api/services/actions';
 
+const path = require('path');
+
+global.appRoot = path.resolve(__dirname);
+
 // make bluebird default Promise
 Promise = require('bluebird'); // eslint-disable-line no-global-assign
 const { port, env } = require('./config/vars');

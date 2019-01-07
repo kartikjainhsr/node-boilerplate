@@ -51,7 +51,12 @@ app.use('/docs', express.static('docs'));
 app.use(rateLimiter());
 
 // file upload
-app.use(fileUpload());
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/',
+  limits: { fileSize: 10 * 1024 * 1024 },
+  abortOnLimit: true,
+}));
 // mount api v1 routes
 app.use('/v1', routes);
 

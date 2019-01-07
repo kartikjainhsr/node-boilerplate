@@ -3,21 +3,23 @@ import fs from 'fs';
 
 const { fileUpload } = require('../../../config/vars');
 
+const APIError = require('../../utils/APIError');
+const httpStatus = require('http-status');
+
 module.exports = {
   /**
-     * @api {all} v1/dispatch/upload call a common api
-     * @apiDescription Call a common api
+     * @api {all} v1/dispatch/upload File Upload
+     * @apiDescription upload file on server
      * @apiVersion 1.0.0
-     * @apiName Common API
-     * @apiGroup Common
+     * @apiName file upload
+     * @apiGroup Dispatch
      * @apiPermission public or private or role based
      *
      * @apiHeader {String} Authorization  User's access token required for public or role based api
      * @apiHeader {String} content-type   multipart/form-data
      *
      * @apiParam  {file}      FileName     file data with file name field
-     * @apiParam  {string}    public       If file can be accessed without auth
-     * @apiParam  [{string}]  roles        For public false case and this roles person will only be able to access this file
+     * @apiParam  {String}    bucket       specify the bucket name based on buckets provided in server config
      *
      * @apiSuccess (Done 200) {Object}  response    response object
      *
@@ -30,42 +32,65 @@ module.exports = {
     dispatch: async ({
       params, user, getModel, dispatch,
     }) => {
-      console.log('upload....files', params);
-      const { files } = params;
+      const { files, bucket } = params;
       if (files) {
         const allPromises = [];
-        if (!fileUpload.type || fileUpload.type === 'local') {
-          const subfolderPath = params.public ? 'public' : 'private';
-          let accessCode = '';
-          if (params.roles) {
-            accessCode = `./uploads/${params.roles.sort().join('-').toLowerCase()}`;
-          }
-          return new Promise((presolve, preject) => {
-            console.log('1111');
-            fs.exists(accessCode, (exists) => {
-              console.log('exists', exists);
-              if (!exists) {
-                fs.mkdirSync(accessCode);
-              }
-              each(Object.keys(files), (file) => {
-                allPromises.push(new Promise((resolve, reject) => {
-                  console.log('pwd', __dirname);
-                  files[file].mv(`./uploads/${subfolderPath}/${accessCode}/${Date.now()}-${files[file].name}`, (err) => {
-                    if (err) {
-                      reject(err);
-                    } else {
-                      resolve({ [file]: `${Date.now()}-${files[file].name}` });
-                    }
-                  });
-                }));
+        const permissions = fileUpload.buckets && fileUpload.buckets[bucket] && fileUpload.buckets[bucket].permissions.write;
+        const isValidRequest = permissions && (permissions.indexOf('ANY') !== -1 || permissions.indexOf(user.role) !== -1);
+        if (isValidRequest) {
+          if ((!fileUpload.type || fileUpload.type === 'local') && fileUpload.buckets[bucket]) {
+            const subfolderPath = bucket;
+            return new Promise((presolve, preject) => {
+              fs.exists(`${appRoot}/uploads/${subfolderPath}`, (exists) => {
+                if (!exists) {
+                  fs.mkdirSync(`${appRoot}/uploads/${subfolderPath}`);
+                }
+                each(Object.keys(files), (file) => {
+                  allPromises.push(new Promise((resolve, reject) => {
+                    files[file].mv(`${appRoot}/uploads/${subfolderPath}/${Date.now()}-${files[file].name}`, (err) => {
+                      if (err) {
+                        reject(err);
+                      } else {
+                        resolve({ [file]: `${subfolderPath}/${Date.now()}-${files[file].name}` });
+                      }
+                    });
+                  }));
+                });
+                presolve(true);
               });
-              presolve(true);
+            }).then(_ => Promise.all(allPromises).then((values) => {
+              console.log(values);
+              return values;
+            }));
+          } else if (fileUpload.type === 'db' && fileUpload.buckets[bucket]) {
+            each(Object.keys(files), (file) => {
+              allPromises.push(new Promise((resolve, reject) => {
+                const filename = `${bucket}/${files[file].name}`;
+
+                const writestream = gfs.createWriteStream({ filename, bucket });
+                fs.createReadStream(files[file].tempFilePath).pipe(writestream);
+                writestream.on('close', (savedFile, err) => {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve({ [file]: savedFile });
+                  }
+                });
+              }));
             });
-          }).then(_ => Promise.all(allPromises).then((values) => {
-            console.log(values);
-            return values;
-          }));
+            return Promise.all(allPromises).then((values) => {
+              console.log(values);
+              return values;
+            });
+          }
         }
+        const apiError = new APIError({
+          message: 'Unauthorized',
+          status: httpStatus.FORBIDDEN,
+          stack: undefined,
+        });
+
+        throw apiError;
         // else if (fileUpload.type == 'db') {
 
         // }

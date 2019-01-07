@@ -104,3 +104,15 @@ exports.actionHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * File Handler
+ * @public
+ */
+exports.fileHandler = (req, res, next) => {
+  try {
+    service.fileHandler(req, res, next);
+  } catch (error) {
+    next(error);
+  }
+};
