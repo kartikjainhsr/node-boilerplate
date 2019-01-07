@@ -67,7 +67,7 @@ module.exports = {
               allPromises.push(new Promise((resolve, reject) => {
                 const filename = `${bucket}/${files[file].name}`;
 
-                const writestream = gfs.createWriteStream({ filename, bucket });
+                const writestream = gfs.createWriteStream({ filename });
                 fs.createReadStream(files[file].tempFilePath).pipe(writestream);
                 writestream.on('close', (savedFile, err) => {
                   if (err) {
