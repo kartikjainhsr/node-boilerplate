@@ -6,6 +6,7 @@
 ## Features
  - Generalization of CRUD API (No need to define CRUD api for every collection just define schema and permissions)
  - File upload and download to filesystem or database
+ - Commom API using dispatch and actions
  - Uses [yarn](https://yarnpkg.com)
  - No transpilers, just vanilla javascript with ES2017 latest features like Async/Await
  - Express + MongoDB ([Mongoose](http://mongoosejs.com/))
@@ -175,6 +176,53 @@ fileUpload: {
 
 Roles and permission will also work file upload and download
 
+## Common API implementation using dispatch and action
+
+Developer just have to define actions and actions can be called as API
+
+Example action file
+```
+const Joi = require('joi');
+
+module.exports = {
+  /**
+     * @api {all} v1/dispatch/testing Dispatch Example
+     * @apiDescription this is example dispatch api for developers at server side
+     * @apiVersion 1.0.0
+     * @apiName Testing
+     * @apiGroup Dispatch
+     * @apiPermission public or private or role based
+     *
+     * @apiHeader {String} Authorization  User's access token required for public or role based api
+     *
+     * @apiParam  {String}              Email     Email of the tester
+     * @apiParam  {String}              name      Name of the tester
+     * @apiParam  {String}              role      Role of the tester
+     *
+     * @apiSuccess (Done 200) {Object}  response    response object
+     *
+     * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
+     * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users
+     * @apiError (Forbidden 403)     Forbidden        You are not allowed to access this API
+  */
+  testing: {
+    public: true,
+    roles: ['SUPERADMIN'],
+    joi: {
+      email: Joi.string().email().required(),
+      name: Joi.string().max(128),
+      role: Joi.string().valid(['CUSTOMER', 'ADMIN', 'SUPERADMIN']),
+    },
+    dispatch: async ({
+      params, user, getModel, dispatch,
+    }) => {
+      const Users = await getModel('User').get({});
+      return { users: Users };
+    },
+  },
+};
+```
+using public and roles keys you can apply auth and permissions
 
 ## Lint
 

@@ -14,10 +14,9 @@ module.exports = {
      *
      * @apiHeader {String} Authorization  User's access token required for public or role based api
      *
-     * @apiParam  {String}              any_string     You can send any keys containing string
-     * @apiParam  {Number}              any_numbers    You can send any keys containing numbers
-     * @apiParam  {Object}              any_object     You can send any keys containing object
-     * @apiParam  {Array}               any_array      You can send any keys containing Array
+     * @apiParam  {String}              Email     Email of the tester
+     * @apiParam  {String}              name      Name of the tester
+     * @apiParam  {String}              role      Role of the tester
      *
      * @apiSuccess (Done 200) {Object}  response    response object
      *
@@ -37,7 +36,6 @@ module.exports = {
       params, user, getModel, dispatch,
     }) => {
       const Users = await getModel('User').get({});
-      console.log('testing....', Users, params, user, getModel, dispatch);
       return { users: Users };
     },
   },
