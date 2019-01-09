@@ -1,6 +1,7 @@
 import { each } from 'lodash';
 
 const { fileUpload } = require('../../../config/vars');
+const Joi = require('joi');
 
 module.exports = {
   /**
@@ -27,6 +28,11 @@ module.exports = {
   testing: {
     public: true,
     roles: ['SUPERADMIN'],
+    joi: {
+      email: Joi.string().email().required(),
+      name: Joi.string().max(128),
+      role: Joi.string().valid(['CUSTOMER', 'ADMIN', 'SUPERADMIN']),
+    },
     dispatch: async ({
       params, user, getModel, dispatch,
     }) => {

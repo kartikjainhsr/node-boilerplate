@@ -1,6 +1,7 @@
 import { authWrapper } from '../../middlewares/auth';
 import mongooseModel from './mongoose.model';
 
+const Joi = require('joi');
 const {
   get,
 } = require('lodash');
@@ -14,6 +15,7 @@ const dispatchAction = async (action, req, resp) => {
 
 const setAction = (action, name) => {
   const dispatch = get(action, 'dispatch', false);
+  const joiValidationSchema = get(action, 'joi', false);
   if (!dispatch || typeof dispatch !== 'function') {
     throw new Error('dispatch key is required in action definition');
   }
@@ -26,6 +28,16 @@ const setAction = (action, name) => {
         }
         try {
           console.log('req', req);
+          if (joiValidationSchema) {
+            joiValidationSchema.action = Joi.string();
+            joiValidationSchema.files = Joi.any();
+            const result = Joi.validate({
+              ...req.query, ...req.body, ...req.params, files: req.files,
+            }, joiValidationSchema);
+            if (result.error) {
+              return reject(result.error);
+            }
+          }
           const data = await dispatch({
             params: {
               ...req.query, ...req.body, ...req.params, files: req.files,
@@ -44,7 +56,16 @@ const setAction = (action, name) => {
   } else {
     actions[name] = async (req, resp) => new Promise(async (resolve, reject) => {
       try {
-        console.log('req', req);
+        if (joiValidationSchema) {
+          joiValidationSchema.action = Joi.string();
+          joiValidationSchema.files = Joi.any();
+          const result = Joi.validate({
+            ...req.query, ...req.body, ...req.params, files: req.files,
+          }, joiValidationSchema);
+          if (result.error) {
+            return reject(result.error);
+          }
+        }
         const data = await dispatch({
           params: {
             ...req.query, ...req.body, ...req.params, files: req.files,
