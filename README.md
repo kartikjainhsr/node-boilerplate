@@ -216,13 +216,15 @@ module.exports = {
     dispatch: async ({
       params, user, getModel, dispatch,
     }) => {
-      const Users = await getModel('User').get({});
+      const Users = await getModel('User').get({ filter: { email: params.email } });
       return { users: Users };
     },
   },
 };
+
 ```
-using public and roles keys you can apply auth and permissions
+using public and roles keys you can apply auth and permissions.
+using joi key you can validate the incoming fields in request params,body and query.
 
 ## Lint
 

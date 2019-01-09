@@ -35,7 +35,7 @@ module.exports = {
     dispatch: async ({
       params, user, getModel, dispatch,
     }) => {
-      const Users = await getModel('User').get({});
+      const Users = await getModel('User').get({ filter: { email: params.email } });
       return { users: Users };
     },
   },
