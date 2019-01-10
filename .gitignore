@@ -47,3 +47,5 @@ jspm_packages
 
 src/uploads/*
 !src/uploads/.gitkeep 
+
+lib
