@@ -1,4 +1,4 @@
-import mongooseModel from '../daffodil.services/mongoose.model';
+import mongooseModel from '../../configure/mongoose.model';
 
 const RefreshToken = require('./refreshToken.model');
 const moment = require('moment-timezone');

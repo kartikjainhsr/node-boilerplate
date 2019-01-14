@@ -1,9 +1,9 @@
 import { each } from 'lodash';
 import fs from 'fs';
 
-const { fileUpload } = require('../../../config/vars');
+const { fileUpload } = require('../../config/vars');
 
-const APIError = require('../../utils/APIError');
+const APIError = require('../utils/APIError');
 const httpStatus = require('http-status');
 
 module.exports = {

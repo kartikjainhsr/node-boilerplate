@@ -1,10 +1,10 @@
-import configure from './api/services/daffodil.services/configure';
+import configure from './api/configure/configure';
 import roles from './config/roles';
 import grantList from './config/grantList';
 import fields from './api/services/fields';
 import hooks from './api/services/hooks';
 import methods from './api/services/methods';
-import actions from './api/services/actions';
+import actions from './api/actions';
 
 const path = require('path');
 

@@ -1,9 +1,9 @@
 import { each } from 'lodash';
 
-const { fileUpload } = require('../../../config/vars');
+const { fileUpload } = require('../../config/vars');
 const Joi = require('joi');
 
-import utils from '../../utils';
+import utils from '../utils';
 
 module.exports = {
   /**
@@ -27,7 +27,7 @@ module.exports = {
      * @apiError (Forbidden 403)     Forbidden        You are not allowed to access this API
   */
   testing: {
-    public: true,
+    public: false,
     roles: ['SUPERADMIN'],
     joi: {
       email: Joi.string().email().required(),
@@ -37,6 +37,7 @@ module.exports = {
     dispatch: async ({
       params, user, getModel, dispatch,
     }) => {
+      // console.log('params--->', params, user);
       const Users = await getModel('User').get({ filter: { email: params.email } });
       utils.notifyGroupsOnSocket('groupId', { users: Users });
       return { users: Users };

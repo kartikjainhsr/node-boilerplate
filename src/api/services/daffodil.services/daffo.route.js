@@ -1,7 +1,7 @@
 const express = require('express');
 const validate = require('express-validation');
 const controller = require('./daffo.controller');
-const { authorize } = require('../../../middlewares/auth');
+const { authorize } = require('../../middlewares/auth');
 const {
   count, get, update, deleteDocument, getFile,
 } = require('./daffo.validation');

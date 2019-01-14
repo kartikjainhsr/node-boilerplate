@@ -1,30 +1,12 @@
-import mongooseModel from '../mongoose.model';
-import API_STORE from '../api.store';
-import { authWrapper } from '../../../middlewares/auth';
-import { download } from '../../../utils/fileSystem';
+import mongooseModel from '../../configure/mongoose.model';
+import API_STORE from '../../configure/api.store';
+import { authWrapper } from '../../middlewares/auth';
+import { download } from '../../utils/fileSystem';
 
-const { fileUpload } = require('../../../../config/vars');
-const APIError = require('../../../utils/APIError');
+const { fileUpload } = require('../../../config/vars');
+const APIError = require('../../utils/APIError');
 const httpStatus = require('http-status');
 const { omit } = require('lodash');
-
-// const User = require('./user.model');
-// const { handler: errorHandler } = require('../../middlewares/error');
-
-/**
- * Load user and append to req.
- * @public
- */
-// exports.load = async (req, res, next, id) => {
-// try {
-//   console.log(12);
-//   const user = await User.get(id);
-//   req.locals = { user };
-//   return next();
-// } catch (error) {
-//   return errorHandler(error, req, res);
-// }
-// };
 
 /**
  * Get user

@@ -1,4 +1,4 @@
-import daffoRoutes from '../../services/daffodil.services/routes/daffo.route';
+import daffoRoutes from '../../services/daffodil.services/daffo.route';
 
 const express = require('express');
 // const userRoutes = require('../../services/user/user.route');

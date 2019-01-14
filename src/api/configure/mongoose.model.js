@@ -5,7 +5,7 @@ const httpStatus = require('http-status');
 const {
   each, get, omitBy, isNil, isEmpty,
 } = require('lodash');
-const APIError = require('./utils/APIError');
+const APIError = require('../utils/APIError');
 
 const MongoOperators = [
   '$set', '$inc', '$push', '$min', '$max', '$addToSet',
@@ -89,7 +89,6 @@ const mongooseModel = {
       async findAndGenerateToken(options) {
         const { email, password, refreshObject } = options;
         if (!email) throw new APIError({ message: 'An email is required to generate a token' });
-
         const user = await this.findOne({ email }).exec();
         const err = {
           status: httpStatus.UNAUTHORIZED,

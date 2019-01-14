@@ -1,4 +1,4 @@
-import { authWrapper } from '../../middlewares/auth';
+import { authWrapper } from '../middlewares/auth';
 import mongooseModel from './mongoose.model';
 
 const Joi = require('joi');
@@ -27,7 +27,6 @@ const setAction = (action, name) => {
           return reject(error);
         }
         try {
-          console.log('req', req);
           if (joiValidationSchema) {
             joiValidationSchema.action = Joi.string();
             joiValidationSchema.files = Joi.any();

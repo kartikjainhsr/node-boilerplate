@@ -1,4 +1,4 @@
-import { accessControl } from '../services/daffodil.services/accessControl';
+import { accessControl } from '../configure/accessControl';
 
 const httpStatus = require('http-status');
 const passport = require('passport');
@@ -16,7 +16,6 @@ const handleAPIStoreAuth = (req, res, next, roles) => async (err, user, info) =>
     status: httpStatus.UNAUTHORIZED,
     stack: error ? error.stack : undefined,
   });
-  console.log('user------->', user);
   try {
     if (error || !user) throw error;
     await logIn(user, { session: false });
