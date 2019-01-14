@@ -1,19 +1,53 @@
-// const Joi = require('joi');
+const Joi = require('joi');
 // const User = require('./user.model');
 
 
-// module.exports = {
+module.exports = {
 
-//   // GET /v1/users
-//   listUsers: {
-//     query: {
-//       page: Joi.number().min(1),
-//       perPage: Joi.number().min(1).max(100),
-//       name: Joi.string(),
-//       email: Joi.string(),
-//       role: Joi.string().valid(User.roles),
-//     },
-//   },
+  // GET /v1/daffo/:collection/count
+  count: {
+    params: {
+      collection: Joi.string().required(),
+    },
+    body: {
+      filter: Joi.object(),
+    },
+  },
+  get: {
+    params: {
+      collection: Joi.string().required(),
+    },
+    body: {
+      filter: Joi.object(),
+      fields: Joi.object(),
+      perPage: Joi.number().min(1).max(100).required(),
+      page: Joi.number().min(1),
+    },
+
+  },
+  update: {
+    params: {
+      collection: Joi.string().required(),
+    },
+    body: {
+      filter: Joi.object(),
+      setter: Joi.object().required(),
+    },
+  },
+  deleteDocument: {
+    params: {
+      collection: Joi.string().required(),
+    },
+    body: {
+      filter: Joi.object().required(),
+    },
+  },
+  getFile: {
+    params: {
+      bucket: Joi.string().required(),
+      name: Joi.string().required(),
+    },
+  },
 
 //   // POST /v1/users
 //   createUser: {
@@ -50,4 +84,4 @@
 //       userId: Joi.string().regex(/^[a-fA-F0-9]{24}$/).required(),
 //     },
 //   },
-// };
+};

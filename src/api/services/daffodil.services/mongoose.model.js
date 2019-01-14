@@ -72,6 +72,14 @@ const mongooseModel = {
           .limit(perPage)
           .exec();
       },
+      getCount({
+        filter = {},
+      }) {
+        console.log('filter', filter);
+        const countCursor = this.count(filter);
+
+        return countCursor;
+      },
       //   /**
       //    * Find user by email and tries to generate a JWT token
       //    *

@@ -3,6 +3,8 @@ import { each } from 'lodash';
 const { fileUpload } = require('../../../config/vars');
 const Joi = require('joi');
 
+import utils from '../../utils';
+
 module.exports = {
   /**
      * @api {all} v1/dispatch/testing Dispatch Example
@@ -36,6 +38,7 @@ module.exports = {
       params, user, getModel, dispatch,
     }) => {
       const Users = await getModel('User').get({ filter: { email: params.email } });
+      utils.notifyGroupsOnSocket('groupId', { users: Users });
       return { users: Users };
     },
   },

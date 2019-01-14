@@ -79,6 +79,21 @@ exports.list = async (req, res, next) => {
 };
 
 /**
+ * Get collection count
+ * @public
+ */
+exports.count = async (req, res, next) => {
+  try {
+    const response = await service.count({
+      query: req.query, body: req.body, params: req.params, user: req.user, access: req.access,
+    });
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Delete user
  * @public
  */

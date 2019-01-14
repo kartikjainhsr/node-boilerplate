@@ -3,10 +3,7 @@ const validate = require('express-validation');
 const controller = require('./daffo.controller');
 const { authorize } = require('../../../middlewares/auth');
 const {
-  listUsers,
-  createUser,
-  replaceUser,
-  updateUser,
+  count, get, update, deleteDocument, getFile,
 } = require('./daffo.validation');
 // const ROLES = require('../../../config/roles');
 
@@ -40,7 +37,7 @@ router
    *
    * @apiError (Forbidden 403)     Forbidden     You will need permission in grant list to access the data.
    */
-  .all(authorize('read_any'), controller.list);
+  .post(authorize('read_any'), validate(get), controller.list);
 
 router
   .route('/:collection/getOwn')
@@ -63,7 +60,27 @@ router
    * @apiError (Forbidden 403)    Forbidden    You will need permission in grant list to access the data.
    * @apiError (Conflict  409)    Conflict     You will need to give current user id in filter.
    */
-  .all(authorize('read_own'), controller.get);
+  .post(authorize('read_own'), validate(get), controller.get);
+
+router
+  .route('/:collection/count')
+  /**
+   * @api {post} v1/daffo/:collection/count Read Any documents
+   * @apiDescription Get a count of any permitted collection's documents.
+   * @apiVersion 1.0.0
+   * @apiName readAnyCollection
+   * @apiGroup CRUD
+   * @apiPermission Any permitted role.
+   *
+   * @apiHeader {String} Authorization  User's access token
+   *
+   * @apiParam  {Object}           [filter]      Collection filter same as mongodb syntax.For ex : {filter : {"age" : {$gte : 20 }}}
+   *
+   * @apiSuccess {Object[]}                      Records List of records.
+   *
+   * @apiError (Forbidden 403)     Forbidden     You will need permission in grant list to access the data.
+   */
+  .post(authorize('read_any'), validate(count), controller.count);
 
 router
   .route('/:collection/create')
@@ -111,7 +128,7 @@ router
    * @apiError (Forbidden 403)             Forbidden        You will need permission to update the data.
    * @apiError (Internal Server Error 500) Undefined        You will need to give the setter in body params.
    */
-  .patch(authorize('update_any'), controller.update);
+  .patch(authorize('update_any'), validate(update), controller.update);
 
 router
   .route('/:collection/updateOwn')
@@ -133,7 +150,7 @@ router
    * @apiError (Forbidden 403)              Forbidden       You will need permission to update the data.
    * @apiError (Internal Server Error 500)  Undefined       You will need to give the setter in body params.
    */
-  .patch(authorize('update_own'), controller.update);
+  .patch(authorize('update_own'), validate(update), controller.update);
 
 router
   .route('/:collection/deleteOwn')
@@ -153,7 +170,7 @@ router
    *
    * @apiError (Forbidden 403)            Forbidden      You will need permission to remove the data.
    */
-  .delete(authorize('remove_own'), controller.remove);
+  .delete(authorize('remove_own'), validate(deleteDocument), controller.remove);
 
 router
   .route('/:collection/delete')
@@ -173,7 +190,7 @@ router
    *
    * @apiError (Forbidden 403)            Forbidden      You will need permission to remove the data.
    */
-  .delete(authorize('remove_any'), controller.remove);
+  .delete(authorize('remove_any'), validate(deleteDocument), controller.remove);
 
 router
   .route('/dispatch/:action')
@@ -201,7 +218,7 @@ router
      * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users
      * @apiError (Forbidden 403)     Forbidden        You are not allowed to access this API
   */
-  .get(controller.fileHandler);
+  .get(controller.fileHandler, validate(getFile));
 
 
 module.exports = router;

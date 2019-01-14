@@ -1,0 +1,25 @@
+{
+  "name": "@applane/graphql-real-time-updates",
+  "version": "1.0.5",
+  "description": "socket plugin for graphql-store for real time update",
+  "main": "./index.js",
+  "author": "applane team",
+  "license": "ISC",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://applane_daffodil@bitbucket.org/applane-redux/graphql-real-time-updates.git"
+  },
+  "keywords": [
+    "applane",
+    "graphql"
+  ],
+  "homepage": "https://bitbucket.org/applane-redux/graphql-real-time-updates#readme",
+  "dependencies": {
+    "socket.io": "1.7.1",
+    "express": "4.13.4"
+  },
+  "devDependencies": {
+    "uglify-js": "^2.7.5"
+  }
+}

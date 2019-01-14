@@ -49,3 +49,5 @@ src/uploads/*
 !src/uploads/.gitkeep 
 
 lib
+
+socket_server/node_modules

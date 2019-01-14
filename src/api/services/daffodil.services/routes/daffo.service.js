@@ -131,6 +131,25 @@ exports.list = async ({
 };
 
 /**
+ * Get documents count
+ * @public
+ */
+exports.count = async ({
+  query, body, params, user, access,
+}) => {
+  console.log('query, body, params, user,', query, body, params, user, access);
+  try {
+    const Collection = mongooseModel.getCollection(params.collection);
+    const data = mongooseModel.queryMakerAndValidator({ access, user, reqParams: { ...query, ...params, ...body } });
+    const count = await Collection.getCount(data);
+    // const transformedUsers = users.map(user => user.transform());
+    return { count };
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
  * Delete user
  * @public
  */
