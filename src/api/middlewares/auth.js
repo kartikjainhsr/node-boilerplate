@@ -19,7 +19,7 @@ const handleAPIStoreAuth = (req, res, next, roles) => async (err, user, info) =>
   });
   try {
     if (error || !user) throw error;
-    // await logIn(user, { session: false });
+    await logIn(user, { session: false });
   } catch (e) {
     return next(apiError);
   }

@@ -1,19 +1,5 @@
-import { sendEmail } from '../../utils';
-
-const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const { env } = require('../../../config/vars');
-
-
-const smtpTransport = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: 'ramesh.bansal@daffodilsw.com', // generated ethereal user
-    pass: 'daffodil@1234', // generated ethereal password
-  },
-});
 
 module.exports = {
   User: {
