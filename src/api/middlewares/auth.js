@@ -9,7 +9,6 @@ const LOGGED_USER = '_loggedUser';
 const Promise = require('bluebird');
 
 const handleAPIStoreAuth = (req, res, next, roles) => async (err, user, info) => {
-  console.log('user----1212--->', user);
   const error = err || info;
   const logIn = Promise.promisify(req.logIn);
   const apiError = new APIError({
@@ -54,17 +53,13 @@ const handleAPIStoreAuth = (req, res, next, roles) => async (err, user, info) =>
 };
 
 const handleJWT = (req, res, next, accessType) => async (err, user, info) => {
-  console.log('user----1212--->', user);
-
   const error = err || info;
   const logIn = Promise.promisify(req.logIn);
-  console.log('user------->', user);
   const apiError = new APIError({
     message: error ? error.message : 'Unauthorized',
     status: httpStatus.UNAUTHORIZED,
     stack: error ? error.stack : undefined,
   });
-  console.log('user------->', user);
   try {
     if (error || !user) throw error;
     await logIn(user, { session: false });
@@ -92,22 +87,15 @@ const handleJWT = (req, res, next, accessType) => async (err, user, info) => {
 exports.ADMIN = ADMIN;
 exports.LOGGED_USER = LOGGED_USER;
 
-exports.authorize = accessType => (req, res, next) => {
-  console.log('<-----1111------------------->', accessType);
-  return passport.authenticate(
-    'jwt', { session: false },
-    handleJWT(req, res, next, accessType),
-  )(req, res, next);
-};
+exports.authorize = accessType => (req, res, next) => passport.authenticate(
+  'jwt', { session: false },
+  handleJWT(req, res, next, accessType),
+)(req, res, next);
 exports.authWrapper = roles => (req, res, next) => {
   passport.authenticate(
     'jwt', { session: false },
     handleAPIStoreAuth(req, res, next, roles),
   )(req, res, next);
-};
-
-exports.accessControl = accessRequired => (req, res, next) => {
-  const { user } = req;
 };
 
 exports.oAuth = service =>
