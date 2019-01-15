@@ -9,6 +9,7 @@ const LOGGED_USER = '_loggedUser';
 const Promise = require('bluebird');
 
 const handleAPIStoreAuth = (req, res, next, roles) => async (err, user, info) => {
+  console.log('user----1212--->', user);
   const error = err || info;
   const logIn = Promise.promisify(req.logIn);
   const apiError = new APIError({
@@ -18,7 +19,7 @@ const handleAPIStoreAuth = (req, res, next, roles) => async (err, user, info) =>
   });
   try {
     if (error || !user) throw error;
-    await logIn(user, { session: false });
+    // await logIn(user, { session: false });
   } catch (e) {
     return next(apiError);
   }
@@ -74,7 +75,7 @@ const handleJWT = (req, res, next, accessType) => async (err, user, info) => {
     user, accessType, table: req.params.collection,
   });
   console.log('access', access);
-  if (!access.allowed) {
+  if (accessType && !access.allowed) {
     apiError.status = httpStatus.FORBIDDEN;
     apiError.message = 'Forbidden';
     return next(apiError);

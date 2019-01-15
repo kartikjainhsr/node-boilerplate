@@ -28,7 +28,7 @@ module.exports = {
   */
   testing: {
     public: false,
-    roles: ['SUPERADMIN'],
+    roles: ['SUPERADMIN', 'GUEST'],
     joi: {
       email: Joi.string().email().required(),
       name: Joi.string().max(128),

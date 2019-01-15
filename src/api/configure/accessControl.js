@@ -111,7 +111,7 @@ const permissions = ({
   } else {
     each(allowedFields, (field) => {
       if (allSchemaFields[table][field]) {
-        if (deniedFields.length && deniedFields.indexOf(field) === -1) {
+        if (deniedFields.indexOf(field) === -1) {
           fields[field] = 1;
         }
       } else {

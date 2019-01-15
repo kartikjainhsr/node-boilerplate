@@ -10,7 +10,7 @@ module.exports = {
   User: {
     transform() {
       const transformed = {};
-      const fields = ['id', 'name', 'email', 'customer', 'role', 'createdAt'];
+      const fields = ['id', 'name', 'email'];
 
       fields.forEach((field) => {
         transformed[field] = this[field];

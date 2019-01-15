@@ -52,6 +52,21 @@ exports.login = async (userData) => {
 };
 
 /**
+ * Returns login use if token is valid
+ * @public
+ */
+exports.getLoginUser = async (userData) => {
+  try {
+    const User = mongooseModel.getCollection('User');
+    const user = await new User(userData);
+    const userTransformed = user.transform();
+    return { userTransformed };
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
  * login with an existing user or creates a new one if valid accessToken token
  * Returns jwt token
  * @public
