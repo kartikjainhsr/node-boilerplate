@@ -1,15 +1,15 @@
-var express = require('express');
-var http = require('http');
-var app = express();
-var PORT = 7900;
+const express = require('express');
+const http = require('http');
 
-var server = http.Server(app);
-var graphqlRealTimeUpdates = require("./index");
+const app = express();
+const PORT = 7900;
+
+const server = http.Server(app);
+const graphqlRealTimeUpdates = require('./index');
 
 graphqlRealTimeUpdates.configure(server, app);
 
-server.listen(PORT, (function () {
-    console.log("socket server is running on port [" + PORT + "]");
+server.listen(PORT, (() => {
+  console.log(`socket server is running on port [${  PORT  }]`);
 }));
-
 

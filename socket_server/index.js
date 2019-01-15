@@ -1,8 +1,8 @@
-var Utility = require("./lib/Utility");
-var Socket  = require("./lib/socket");
+let Utility = require('./src/Utility');
+let Socket = require('./src/socket');
 
-module.exports  = {
-    getRequestParams : Utility.getRequestParams,
-    configure :Socket.configure,
-    emitGroupUpdates  :Socket.emitGroupUpdates
-}
+module.exports = {
+  getRequestParams: Utility.getRequestParams,
+  configure: Socket.configure,
+  emitGroupUpdates: Socket.emitGroupUpdates,
+};
