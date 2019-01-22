@@ -84,7 +84,8 @@ exports.update = async ({
     const Collection = mongooseModel.getCollection(params.collection);
     const data = mongooseModel.setterMakerAndValidator({ access, user, reqParams: { ...query, ...params, ...body } });
     const users = await Collection.update(data.filter, data.setter, { multi: true });
-    return users;
+    const updatedData = Collection.get({ filter: data.filter });
+    return updatedData;
   } catch (error) {
     throw error;
   }

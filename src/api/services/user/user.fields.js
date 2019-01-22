@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const ROLES = require('../../../config/roles');
+const { emailVerification } = require('../../../config/vars');
 /**
 * User Roles
 */
@@ -43,6 +44,18 @@ const fieldsDefinitions = {
     trim: true,
   },
   customer: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' },
+  resetPasswordToken: {
+    type: String,
+  },
 };
+if (emailVerification) {
+  fieldsDefinitions.emailVerified = {
+    type: Boolean,
+    default: false,
+  };
+  fieldsDefinitions.emailVerificationCode = {
+    type: String,
+  };
+}
 
 module.exports = fieldsDefinitions;

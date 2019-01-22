@@ -1,6 +1,6 @@
+import { emailVerification } from '../../config/vars';
+
 const mongoose = require('mongoose');
-
-
 const httpStatus = require('http-status');
 const {
   each, get, omitBy, isNil, isEmpty,
@@ -95,6 +95,9 @@ const mongooseModel = {
           isPublic: true,
         };
         if (password) {
+          if (emailVerification && !user.emailVerified) {
+            throw new APIError({ message: 'Your email is not verified', status: httpStatus.UNAUTHORIZED });
+          }
           if (user && await user.passwordMatches(password)) {
             return { user, accessToken: user.token() };
           }

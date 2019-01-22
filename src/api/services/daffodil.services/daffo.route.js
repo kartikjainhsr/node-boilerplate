@@ -65,10 +65,10 @@ router
 router
   .route('/:collection/count')
   /**
-   * @api {post} v1/daffo/:collection/count Read Any documents
+   * @api {post} v1/daffo/:collection/count Count documents
    * @apiDescription Get a count of any permitted collection's documents.
    * @apiVersion 1.0.0
-   * @apiName readAnyCollection
+   * @apiName count
    * @apiGroup CRUD
    * @apiPermission Any permitted role.
    *
@@ -76,7 +76,7 @@ router
    *
    * @apiParam  {Object}           [filter]      Collection filter same as mongodb syntax.For ex : {filter : {"age" : {$gte : 20 }}}
    *
-   * @apiSuccess {Object[]}                      Records List of records.
+   * @apiSuccess {Object}          count         Number of documents
    *
    * @apiError (Forbidden 403)     Forbidden     You will need permission in grant list to access the data.
    */
@@ -199,7 +199,7 @@ router
 router
   .route('/file/:bucket/:filename')
 /**
-     * @api {all} v1/daffo/file/bucket/filename File Upload
+     * @api {all} v1/daffo/file/bucket/filename File download
      * @apiDescription get file from server
      * @apiVersion 1.0.0
      * @apiName get files

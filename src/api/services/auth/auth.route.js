@@ -153,8 +153,10 @@ router.route('/google')
  * @apiName isLogin
  * @apiGroup Auth
  * @apiPermission public
+ * @apiHeader {String} Authorization  User's access token
  *
- * @apiParam  {String}  access_token  Google's access_token
+ * @apiSuccess {String}  tokenType     Access Token's type
+ * @apiSuccess {String}  accessToken   Authorization Token
  *
  * @apiSuccess {object}  user    login user info
  *
@@ -163,5 +165,60 @@ router.route('/google')
  */
 router.route('/isLogin')
   .get(authorize(), controller.isLogin);
+
+router.route('/verify').get(controller.verifyEmail);
+/**
+ * @api {post} v1/auth/forget Forget Password
+ * @apiDescription Forget password
+ * @apiVersion 1.0.0
+ * @apiName forget
+ * @apiGroup Auth
+ * @apiPermission public
+ *
+  * @apiParam  {String}  email         User's email
+ *
+ * @apiSuccess {object}  status        exa: {done: true}
+ *
+ * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
+ */
+router.route('/forget').post(controller.forgetPassword);
+
+router.route('/verify').get(controller.verifyEmail);
+/**
+ * @api {post} v1/auth/reset Reset password
+ * @apiDescription Reset password
+ * @apiVersion 1.0.0
+ * @apiName reset
+ * @apiGroup Auth
+ * @apiPermission private
+ *
+ * @apiParam  {String}  email         User's email
+ * @apiParam  {String}  password      User's new password
+ *
+ * @apiSuccess {object}  status        exa: {done: true}
+ *
+ * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
+ */
+
+// No API documentation for this route
+router.route('/reset/:token').post(controller.resetPassword);
+/**
+ * @api {post} v1/auth/changePassword Change password
+ * @apiDescription Change password
+ * @apiVersion 1.0.0
+ * @apiName changePassword
+ * @apiGroup Auth
+ * @apiPermission private
+ *
+ * @apiHeader {String} Authorization  User's access token
+ *
+ * @apiParam  {String}  password         User's old password
+ * @apiParam  {String}  newPassword      User's new password
+ *
+ * @apiSuccess {object}  status        exa: {done: true}
+ *
+ * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
+ */
+router.route('/changePassword').post(authorize(), controller.changePassword);
 
 module.exports = router;

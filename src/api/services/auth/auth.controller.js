@@ -4,6 +4,7 @@ import { rejects } from 'assert';
 
 const httpStatus = require('http-status');
 const service = require('./auth.service');
+const { emailVerification, host } = require('../../../config/vars');
 
 /**
  * Returns jwt token if registration was successful
@@ -13,11 +14,9 @@ const service = require('./auth.service');
  * send email
  * @public
  */
-const sendVerificationEmail = async (user, req) => new Promise(async (resolve, reject) => {
+const sendVerificationEmail = async (user, emailVerificationCode, req) => new Promise(async (resolve, reject) => {
   try {
-    const rand = Math.floor((Math.random() * 100) + 54);
-    const host = 'localhost:3000';
-    const link = `http://${host}/verify?id=${rand}`;
+    const link = `${host}/v1/auth/verify?id=${emailVerificationCode}&email=${encodeURIComponent(user.email)}`;
     const mailOptions = {
       to: user.email,
       subject: 'Please confirm your Email account',
@@ -32,9 +31,16 @@ const sendVerificationEmail = async (user, req) => new Promise(async (resolve, r
 });
 exports.register = async (req, res, next) => {
   try {
+    if (emailVerification) {
+      const emailVerificationCode = `${Math.floor((Math.random() * 100) + 54)}`;
+      const userData = { ...req.body, emailVerificationCode };
+      const response = await service.register(userData);
+      console.log('response........', response);
+      const emailResponse = await sendVerificationEmail(response.user, emailVerificationCode, req);
+      return res.status(httpStatus.CREATED).json(response);
+    }
     const response = await service.register(req.body);
     console.log('response........', response);
-    const emailResponse = await sendVerificationEmail(response.user, req);
     return res.status(httpStatus.CREATED).json(response);
   } catch (error) {
     return next(error);
@@ -95,3 +101,53 @@ exports.refresh = async (req, res, next) => {
     return next(error);
   }
 };
+
+/**
+ * Email Verification
+ * @public
+ */
+exports.verifyEmail = async (req, res, next) => {
+  try {
+    const response = await service.verifyEmail(req.query);
+    return res.json(response);
+  } catch (error) {
+    return next(error);
+  }
+};
+/**
+ * Forget password
+ * @public
+ */
+exports.forgetPassword = async (req, res, next) => {
+  try {
+    const response = await service.forgetPassword(req.body);
+    return res.json(response);
+  } catch (error) {
+    return next(error);
+  }
+};
+/**
+ * reset password
+ * @public
+ */
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const response = await service.resetPassword({ ...req.body, ...req.params });
+    return res.json(response);
+  } catch (error) {
+    return next(error);
+  }
+};
+/**
+ * change password
+ * @public
+ */
+exports.changePassword = async (req, res, next) => {
+  try {
+    const response = await service.changePassword({ loginUser: req.user, ...req.body, ...req.params });
+    return res.json(response);
+  } catch (error) {
+    return next(error);
+  }
+};
+
