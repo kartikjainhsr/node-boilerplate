@@ -15,6 +15,11 @@ const grantList =
             allowedFields: ['*'],
             deniedFields: ['services', 'password'],
           },
+          create_own: {
+            setter: { },
+            allowedFields: ['*'],
+            // deniedFields: ['user'],
+          },
         },
         Customer: {
           read_any: {

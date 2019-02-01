@@ -269,7 +269,10 @@ const mongooseModel = {
   insertMakerAndValidator({
     access, data,
   }) {
-    each(Object.keys(data), (field) => {
+    const setterFields = {};
+    normalizeSetterFields(data, setterFields);
+    console.log('setterFields', setterFields);
+    each(Object.keys(setterFields), (field) => {
       if (!access.fields[field]) {
         console.log('filed...', field);
         throw new APIError({
