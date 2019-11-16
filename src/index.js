@@ -2,9 +2,9 @@ import configure from './api/configure/configure';
 import roles from './config/roles';
 import grantList from './config/grantList';
 import fields from './api/services/fields';
-import hooks from './api/services/hooks';
-import methods from './api/services/methods';
-import actions from './api/actions';
+import { hooks } from './api/services/hooks';
+import { methods } from './api/services/methods';
+import { actions } from './api/actions';
 
 const path = require('path');
 

@@ -2,25 +2,6 @@ const { socket } = require('../../config/vars');
 
 const _extends = Object.assign || function (target) { for (let i = 1; i < arguments.length; i++) { const source = arguments[i]; for (const key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-const notifyGroupsOnSocket = function notifyGroupsOnSocket(groupIds, data) {
-  const options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  console.log('socket', socket);
-  if (!socket || !socket.host || !socket.port) {
-    throw new Error('Socket info not found in config to notify groups');
-  }
-  if (Array.isArray(groupIds)) {
-    groupIds = JSON.stringify(groupIds);
-  }
-  const path = `/rest/notifyGroup?groupid=${groupIds}&data=${encodeURIComponent(JSON.stringify(data))}&options=${encodeURIComponent(JSON.stringify(options))}`;
-  const service = {
-    hostname: socket.host,
-    port: socket.port,
-    path,
-    method: 'GET',
-  };
-  executeService(service);
-};
-
 const executeService = function executeService(service, params, options) {
   return new Promise(((resolve, reject) => {
     try {
@@ -34,7 +15,7 @@ const executeService = function executeService(service, params, options) {
           service.hostname = service.hostname.indexOf('http') === 0 ? service.hostname : `http://${service.hostname}`;
           const request = require('request');
           request(service.hostname, requestOptions, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode === 200) {
               resolve(body);
             } else {
               let errorInfo = error;
@@ -60,7 +41,7 @@ const executeService = function executeService(service, params, options) {
         if (options.https) {
           http = require('https');
         }
-        const path = service.path;
+        const { path } = service;
         let queryString = '';
         if (params && Object.keys(params).length > 0) {
           queryString = QueryString.stringify(params);
@@ -99,6 +80,25 @@ const executeService = function executeService(service, params, options) {
       reject(err);
     }
   }));
+};
+
+const notifyGroupsOnSocket = function notifyGroupsOnSocket(groupIds, data) {
+  const options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  console.log('socket', socket);
+  if (!socket || !socket.host || !socket.port) {
+    throw new Error('Socket info not found in config to notify groups');
+  }
+  if (Array.isArray(groupIds)) {
+    groupIds = JSON.stringify(groupIds);
+  }
+  const path = `/rest/notifyGroup?groupid=${groupIds}&data=${encodeURIComponent(JSON.stringify(data))}&options=${encodeURIComponent(JSON.stringify(options))}`;
+  const service = {
+    hostname: socket.host,
+    port: socket.port,
+    path,
+    method: 'GET',
+  };
+  executeService(service);
 };
 
 module.exports = {

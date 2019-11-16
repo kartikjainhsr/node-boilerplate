@@ -18,8 +18,8 @@ module.exports = {
      * @apiHeader {String} Authorization  User's access token required for public or role based api
      * @apiHeader {String} content-type   multipart/form-data
      *
-     * @apiParam  {file}      FileName     file data with file name field
-     * @apiParam  {String}    bucket       specify the bucket name based on buckets provided in server config
+     * @apiParam  {file}   FileName  file data with file name field
+     * @apiParam  {String} bucket specify the bucket name based on buckets provided in server config
      *
      * @apiSuccess (Done 200) {Object}  response    response object
      *
@@ -40,7 +40,7 @@ module.exports = {
         if (isValidRequest) {
           if ((!fileUpload.type || fileUpload.type === 'local') && fileUpload.buckets[bucket]) {
             const subfolderPath = bucket;
-            return new Promise((presolve, preject) => {
+            return new Promise((resolve, reject) => {
               fs.exists(`${appRoot}/uploads/${subfolderPath}`, (exists) => {
                 if (!exists) {
                   fs.mkdirSync(`${appRoot}/uploads/${subfolderPath}`);
@@ -56,7 +56,7 @@ module.exports = {
                     });
                   }));
                 });
-                presolve(true);
+                resolve(true);
               });
             }).then(_ => Promise.all(allPromises).then((values) => {
               console.log(values);
@@ -95,6 +95,7 @@ module.exports = {
 
         // }
       }
+      return null;
     },
   },
 };

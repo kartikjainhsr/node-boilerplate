@@ -27,7 +27,6 @@ exports.get = async ({
   }
 };
 
-
 /**
  * Create new user
  * @public

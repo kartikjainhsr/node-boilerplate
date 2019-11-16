@@ -47,7 +47,6 @@ exports.register = async (req, res, next) => {
   }
 };
 
-
 /**
  * Returns jwt token if valid username and password is provided
  * @public
@@ -150,4 +149,3 @@ exports.changePassword = async (req, res, next) => {
     return next(error);
   }
 };
-

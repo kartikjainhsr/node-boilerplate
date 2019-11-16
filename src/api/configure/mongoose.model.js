@@ -15,7 +15,7 @@ const MongoDeleteOperators = ['$pop', '$pull', '$unset'];
 
 const collection = {};
 const mongooseModel = {
-  addCollection(collectionName, collectionFields, hooks, methods) {
+  addCollection (collectionName, collectionFields, hooks, methods) {
     const collectionSchema = new mongoose.Schema(collectionFields, { timestamps: true });
     /*
       Methods
@@ -48,7 +48,7 @@ const mongooseModel = {
      * @param {number} limit - Limit number of records to be returned.
      * @returns {Promise<Collection[]>}
      */
-      get({
+      get ({
         page = 1, perPage = 30, sort = { createdAt: -1 }, filter = {}, fields, populate = [],
       }) {
         if (perPage === 0) {
@@ -72,7 +72,7 @@ const mongooseModel = {
           .limit(perPage)
           .exec();
       },
-      getCount({
+      getCount ({
         filter = {},
       }) {
         console.log('filter', filter);
@@ -86,7 +86,7 @@ const mongooseModel = {
       //    * @param {ObjectId} id - The objectId of user.
       //    * @returns {Promise<User, APIError>}
       //    */
-      async findAndGenerateToken(options) {
+      async findAndGenerateToken (options) {
         const { email, password, refreshObject } = options;
         if (!email) throw new APIError({ message: 'An email is required to generate a token' });
         const user = await this.findOne({ email }).exec();
@@ -116,7 +116,7 @@ const mongooseModel = {
    * @param {Error} error
    * @returns {Error|APIError}
    */
-      checkDuplicateEmail(error) {
+      checkDuplicateEmail (error) {
         if (error.code === 11000 && (error.name === 'BulkWriteError' || error.name === 'MongoError')) {
           return new APIError({
             message: 'Validation Error',
@@ -133,7 +133,7 @@ const mongooseModel = {
         return error;
       },
 
-      async oAuthLogin({
+      async oAuthLogin ({
         service, id, email, name, picture,
       }) {
         const user = await this.findOne({ $or: [{ [`services.${service}`]: id }, { email }] });
@@ -152,10 +152,10 @@ const mongooseModel = {
     };
     collection[collectionName] = mongoose.model(collectionName, collectionSchema);
   },
-  getCollection(collectionName) {
+  getCollection (collectionName) {
     return collection[collectionName];
   },
-  queryMakerAndValidator({ access, reqParams, user }) {
+  queryMakerAndValidator ({ access, reqParams, user }) {
     // const options = omitBy({ name, email, role }, isNil);
     let topLevelFields = '';
     let populateStack = [];
@@ -202,7 +202,7 @@ const mongooseModel = {
       filter, fields: topLevelFields, populate: populateStack, sort: reqParams.sort, page: reqParams.page, perPage: reqParams.perPage,
     };
   },
-  setterMakerAndValidator({ access, reqParams, user }) {
+  setterMakerAndValidator ({ access, reqParams, user }) {
     /* TO Do setter making */
     const setterFields = {};
     each(Object.keys(reqParams.setter), (op) => {
@@ -266,7 +266,7 @@ const mongooseModel = {
       filter, setter: reqParams.setter,
     };
   },
-  insertMakerAndValidator({
+  insertMakerAndValidator ({
     access, data,
   }) {
     const setterFields = {};
@@ -287,7 +287,6 @@ const mongooseModel = {
     return data;
   },
 };
-
 
 const populate = (data, populateStack, level = 0, stack = {}, path = false, nestedParamsFields = {}) => {
   if (data) {

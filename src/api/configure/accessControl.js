@@ -146,7 +146,6 @@ const getFields = (model, fields = {}) => {
   return fields;
 };
 
-
 module.exports = {
   accessControl,
 };

@@ -13,7 +13,7 @@ const crypto = require('crypto');
  * Returns a formated object with tokens
  * @private
  */
-function generateTokenResponse(user, accessToken) {
+function generateTokenResponse (user, accessToken) {
   const tokenType = 'Bearer';
   const refreshToken = RefreshToken.generate(user).token;
   const expiresIn = moment().add(jwtExpirationInterval, 'minutes');
@@ -21,7 +21,6 @@ function generateTokenResponse(user, accessToken) {
     tokenType, accessToken, refreshToken, expiresIn,
   };
 }
-
 
 /**
  * Returns jwt token if registration was successful

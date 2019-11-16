@@ -1,9 +1,9 @@
 import { each } from 'lodash';
 
+import utils from '../utils';
+
 const { fileUpload } = require('../../config/vars');
 const Joi = require('joi');
-
-import utils from '../utils';
 
 module.exports = {
   /**

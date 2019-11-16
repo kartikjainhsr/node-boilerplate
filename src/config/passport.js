@@ -1,4 +1,4 @@
-import mongooseModel from '../api/configure/mongoose.model';
+import { mongooseModel } from '../api/configure/mongoose.model';
 
 const JwtStrategy = require('passport-jwt').Strategy;
 const BearerStrategy = require('passport-http-bearer');

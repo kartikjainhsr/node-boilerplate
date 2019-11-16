@@ -1,8 +1,58 @@
 const Utility = require('./Utility');
 const socket = require('socket.io');
 
-let io = void 0;
-const configure = function (server, app) {
+let io;
+
+const joinGroup = (socketId, groups) => {
+  const socket = io.sockets.sockets[socketId];
+  if (socket) {
+    if (groups instanceof Array) {
+      groups.forEach((group) => {
+        socket.join(group);
+      });
+    } else {
+      socket.join(groups);
+    }
+  }
+};
+
+const leaveGroup = (socketId, groups) => {
+  const socket = io.sockets.sockets[socketId];
+  if (socket) {
+    if (groups instanceof Array) {
+      groups.forEach((group) => {
+        socket.leave(group);
+      });
+    } else {
+      socket.leave(groups);
+    }
+  }
+};
+
+const emitGroupUpdates = (groups, update, options) => {
+  options = options || {};
+  if (groups instanceof Array) {
+    groups.forEach((group) => {
+      io.to(group).emit('updateInRow', { group, data: update, options });
+    });
+  } else {
+    io.to(groups).emit('updateInRow', { group: groups, data: update, options });
+  }
+};
+
+const parseJSON = (data) => {
+  if (typeof data === 'string') {
+    try {
+      return JSON.parse(data);
+    } catch (err) {
+      return data;
+    }
+  } else {
+    return data;
+  }
+};
+
+const configure = (server, app) => {
   io = socket(server);
   io.on('connection', (socket) => {
     console.log(`connection created ::::${socket.id}`);
@@ -33,56 +83,6 @@ const configure = function (server, app) {
     }
   });
 };
-const parseJSON = (data) => {
-  if (typeof data === 'string') {
-    try {
-      return JSON.parse(data);
-    } catch (err) {
-      return data;
-    }
-  } else {
-    return data;
-  }
-};
-
-const emitGroupUpdates = (groups, update, options) => {
-  options = options || {};
-  if (groups instanceof Array) {
-    groups.forEach((group) => {
-      io.to(group).emit('updateInRow', { group, data: update, options });
-    });
-  } else {
-    io.to(groups).emit('updateInRow', { group: groups, data: update, options });
-  }
-};
-
-
-const joinGroup = (socketId, groups) => {
-  const socket = io.sockets.sockets[socketId];
-  if (socket) {
-    if (groups instanceof Array) {
-      groups.forEach((group) => {
-        socket.join(group);
-      });
-    } else {
-      socket.join(groups);
-    }
-  }
-};
-
-const leaveGroup = (socketId, groups) => {
-  const socket = io.sockets.sockets[socketId];
-  if (socket) {
-    if (groups instanceof Array) {
-      groups.forEach((group) => {
-        socket.leave(group);
-      });
-    } else {
-      socket.leave(groups);
-    }
-  }
-};
-
 
 module.exports = {
   configure,
