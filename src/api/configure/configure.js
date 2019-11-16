@@ -1,7 +1,7 @@
 import { each } from 'lodash';
 import { accessControl } from './accessControl';
-import mongooseModel from './mongoose.model';
-import API_STORE from './api.store';
+import { mongooseModel } from './mongoose.model';
+import { API_STORE } from './api.store';
 
 const configure = ({
   fields, grantList, roles, hooks = {}, methods = {}, actions = {},
@@ -16,6 +16,5 @@ const configure = ({
   });
   accessControl.configureAccessControlList();
 };
-
 
 module.exports = configure;

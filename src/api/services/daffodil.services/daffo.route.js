@@ -14,7 +14,6 @@ const router = express.Router();
  */
 // router.param('userId', controller.load);
 
-
 router
   .route('/:collection/get')
   /**
@@ -219,6 +218,5 @@ router
      * @apiError (Forbidden 403)     Forbidden        You are not allowed to access this API
   */
   .get(controller.fileHandler, validate(getFile));
-
 
 module.exports = router;

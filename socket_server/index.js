@@ -1,5 +1,5 @@
-let Utility = require('./src/Utility');
-let Socket = require('./src/socket');
+const Utility = require('./src/Utility');
+const Socket = require('./src/socket');
 
 module.exports = {
   getRequestParams: Utility.getRequestParams,

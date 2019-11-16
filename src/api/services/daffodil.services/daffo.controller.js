@@ -18,7 +18,6 @@ exports.get = async (req, res, next) => {
   }
 };
 
-
 /**
  * Create new user
  * @public
